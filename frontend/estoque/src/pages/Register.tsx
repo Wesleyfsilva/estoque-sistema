@@ -1,22 +1,29 @@
 import React, { useState } from 'react';
 import api from '../services/api';
 
-const Login: React.FC = () => {
+const Register: React.FC = () => {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = async () => {
+    const handleRegister = async () => {
         try {
-            const response = await api.post('/users/login', { email, password });
-            alert(`Login bem-sucedido! Token: ${response.data.token}`);
+            const response = await api.post('/users/register', { name, email, password });
+            alert(response.data.message);
         } catch (error) {
-            alert('Erro ao fazer login');
+            alert('Erro ao registrar usuário');
         }
     };
 
     return (
         <div>
-            <h1>Login</h1>
+            <h1>Registrar</h1>
+            <input
+                type="text"
+                placeholder="Nome"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+            />
             <input
                 type="email"
                 placeholder="Email"
@@ -29,9 +36,9 @@ const Login: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
-            <button onClick={handleLogin}>Entrar</button>
+            <button onClick={handleRegister}>Registrar</button>
         </div>
     );
 };
 
-export default Login;
+export default Register;
