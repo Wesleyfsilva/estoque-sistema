@@ -1,0 +1,20 @@
+# Ignorar pastas do sistema e locais
+node_modules/
+.vscode/
+.idea/
+.cache/
+AppData/
+OneDrive/
+
+# Ignorar arquivos temporários
+*.log
+*.tmp
+*.swp
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Ignorar outros arquivos irrelevantes
+Ambiente de Impressão/
+Ambiente de Rede/
+Dados de Aplicativos/

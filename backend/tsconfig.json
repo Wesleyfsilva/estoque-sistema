@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    /* Configurações Essenciais */
+    "target": "ES6",                     /* Suporte à sintaxe moderna do JavaScript */
+    "module": "commonjs",                /* Compatível com o Node.js */
+    "rootDir": "./src",                  /* Define a pasta com os arquivos TypeScript */
+    "outDir": "./dist",                  /* Define a pasta onde o JavaScript será gerado */
+    "strict": true,                      /* Ativa verificações de tipo rigorosas */
+    "esModuleInterop": true,             /* Permite interoperabilidade com módulos CommonJS */
+    "forceConsistentCasingInFileNames": true, /* Certifica nomes de arquivos consistentes */
+    "resolveJsonModule": true,           /* Permite importar arquivos JSON */
+    "sourceMap": true,                   /* Gera arquivos .map para debug */
+    
+    /* Opções Adicionais */
+    "skipLibCheck": true                 /* Ignora verificações de tipo em bibliotecas */
+  },
+  "include": ["src/**/*"],               /* Inclui todos os arquivos dentro de 'src' */
+  "exclude": ["node_modules", "dist"]    /* Exclui dependências e arquivos compilados */
+}
