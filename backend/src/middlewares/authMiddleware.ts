@@ -1,15 +1,22 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
-    if (!token) return res.status(401).json({ error: 'Acesso negado' });
+
+    if (!token) {
+        res.status(401).json({ error: 'Acesso negado' });
+        return;
+    }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-        (req as any).user = decoded;
+        const secret = process.env.JWT_SECRET || 'secrettoken';
+        const decoded = jwt.verify(token, secret) as jwt.JwtPayload;
+        (req as any).user = decoded; // Adiciona o usuário decodificado ao objeto `req`
         next();
     } catch (error) {
-        res.status(401).json({ error: 'Token inválido' });
+        console.error('Erro de autenticação:', error);
+        res.status(401).json({ error: 'Token inválido ou expirado' });
+        return;
     }
 };

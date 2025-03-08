@@ -11,4 +11,15 @@ const pool = mysql.createPool({
     port: Number(process.env.DB_PORT),
 });
 
+console.log('Conexão com o banco:', {
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT,
+});
+
+
+
+
+
 export default pool;
