@@ -203,3 +203,28 @@ http://localhost:5173
 /products/new: Cadastra um novo produto.
 
 /products/:id/edit: Edita um produto existente.
+
+🛠 Como Contribuir
+Faça um fork do projeto.
+
+Crie uma branch para suas alterações:
+
+git checkout -b minha-feature
+Faça o commit:
+
+git commit -m "Minha nova feature"
+Envie suas mudanças:
+
+git push origin minha-feature
+Abra um Pull Request.
+
+📝 Licença
+Este projeto é distribuído sob a licença MIT.
+
+
+### **Pronto para Subir ao GitHub!**
+1. Salve os arquivos `README.md` no diretório correto (backend e frontend).
+2. Siga os passos de commit e push pelo terminal que mencionei antes.
+
+Se precisar ajustar ou esclarecer algo, é só chamar! 🚀✨
+
