@@ -3,20 +3,24 @@ import multer from 'multer';
 import {
     getProducts,
     addProduct,
-    updateProduct,
-    deleteProduct,
-    updateStock
 } from '../controllers/productsControllers';
-import { authMiddleware } from '../middlewares/authMiddleware';
+import { authenticateToken } from '../middlewares/authMiddleware';
 
 const router = express.Router();
-const upload = multer({ storage: multer.memoryStorage() });
 
-// Rotas de Produtos
-router.get('/', authMiddleware, getProducts); // Listar produtos
-router.post('/', authMiddleware, upload.single('image'), addProduct); // Adicionar produto
-router.put('/:id', authMiddleware, upload.single('image'), updateProduct); // Atualizar produto
-router.delete('/:id', authMiddleware, deleteProduct); // Remover produto
-router.patch('/:id/stock', authMiddleware, updateStock); // Atualizar estoque
+// Configuração do multer para upload de imagens
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads/'); // Diretório onde as imagens serão salvas
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname); // Gera nomes únicos para cada arquivo
+    },
+});
+const upload = multer({ storage });
+
+// Rotas de produtos
+router.get('/', authenticateToken, getProducts);
+router.post('/', authenticateToken, upload.single('image'), addProduct);
 
 export default router;

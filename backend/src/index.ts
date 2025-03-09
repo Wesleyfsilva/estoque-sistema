@@ -1,36 +1,32 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import userRoutes from './routes/userRoutes';
-import productRoutes from './routes/productsRoutes';
 import cors from 'cors';
 import morgan from 'morgan';
+import userRoutes from './routes/userRoutes';
+import productRoutes from './routes/productsRoutes';
+import path from 'path';
 
-console.log('Iniciando o servidor...');
-
-// Configuração de variáveis de ambiente
 dotenv.config();
 
-// Inicialização do Express
 const app = express();
 
 // Middlewares
-app.use(cors()); // Permite comunicação entre frontend e backend
-app.use(morgan('dev')); // Logs detalhados de requisições
-app.use(express.json()); // Parse de JSON no body das requisições
+app.use(cors());
+app.use(morgan('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Rotas
-app.use('/api/users', userRoutes); // Rotas de usuários
-app.use('/api/products', productRoutes); // Rotas de produtos
+app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
 
-// Rota padrão (teste)
+// Rota inicial
 app.get('/', (req, res) => {
-    res.send('API funcionando!'); // Mensagem de teste
+    res.send('API funcionando!');
 });
 
-// Inicialização do Servidor
-const PORT = process.env.PORT || 3000;
+// Inicialização do servidor
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
-
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // Necessário para `form-data`
