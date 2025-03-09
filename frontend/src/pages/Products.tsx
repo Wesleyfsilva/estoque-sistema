@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../services/api"; // Certifique-se de que api.ts está configurado com baseURL correta
+import api from "../services/api";
 
-// Interface para os produtos
 interface Product {
   id: number;
   name: string;
   description: string;
-  price: string | number; // Pode ser string ou número
+  price: string | number;
   stock: number;
-  image?: string; // Imagem é opcional
+  image?: string;
 }
 
 const Products = () => {
@@ -28,50 +27,50 @@ const Products = () => {
       }
 
       try {
-        console.log("Buscando produtos com o token:", token);
         const { data } = await api.get<Product[]>("/products", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log("Produtos recebidos:", data);
-        setProducts(data); // Atualiza os produtos recebidos
+        setProducts(data);
       } catch (error) {
-        console.error("Erro ao buscar produtos:", error);
         alert("Erro ao carregar produtos.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProducts(); // Chamada da API ao carregar o componente
+    fetchProducts();
   }, [navigate]);
 
-  // Função para excluir o produto
   const handleDelete = async (id: number) => {
-    const confirmDelete = window.confirm("Tem certeza que deseja excluir este produto?");
-    if (!confirmDelete) return; // Cancela a exclusão se o usuário clicar em "Cancelar"
+    if (!window.confirm("Tem certeza que deseja excluir este produto?")) return;
 
     try {
       const token = localStorage.getItem("token");
       await api.delete(`/products/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      alert("Produto excluído com sucesso!");
-      // Atualiza a lista de produtos sem o excluído
       setProducts(products.filter((product) => product.id !== id));
     } catch (error) {
-      console.error("Erro ao excluir produto:", error);
-      alert("Não foi possível excluir o produto.");
+      alert("Erro ao excluir produto.");
     }
   };
 
-  // Exibe uma mensagem enquanto os produtos estão sendo carregados
-  if (loading) {
-    return <p>Carregando produtos...</p>;
-  }
+  if (loading) return <p>Carregando produtos...</p>;
 
-  // Exibe mensagem caso nenhum produto seja encontrado
   if (products.length === 0) {
-    return <p>Nenhum produto encontrado.</p>;
+    return (
+      <div className="products-page">
+        <div className="empty-products">
+          <p>Nenhum produto encontrado.</p>
+          <button
+            className="add-product-button"
+            onClick={() => navigate("/add-product")}
+          >
+            Adicionar Produto
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -91,7 +90,8 @@ const Products = () => {
             <th>Nome</th>
             <th>Descrição</th>
             <th>Preço</th>
-            <th>Quantidade</th>
+            <th>Estoque</th>
+            <th>Imagem</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -100,12 +100,24 @@ const Products = () => {
             <tr key={product.id}>
               <td>{product.name}</td>
               <td>{product.description}</td>
-              <td>
-                {isNaN(Number(product.price))
-                  ? "Preço inválido"
-                  : `R$${Number(product.price).toFixed(2)}`}
-              </td>
+              <td>R${Number(product.price).toFixed(2)}</td>
               <td>{product.stock}</td>
+              <td>
+                {product.image ? (
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      objectFit: "cover",
+                      borderRadius: "4px",
+                    }}
+                  />
+                ) : (
+                  "Sem imagem"
+                )}
+              </td>
               <td>
                 <button
                   className="edit-button"
@@ -115,7 +127,7 @@ const Products = () => {
                 </button>
                 <button
                   className="delete-button"
-                  onClick={() => handleDelete(product.id)} // Chama a função de exclusão
+                  onClick={() => handleDelete(product.id)}
                 >
                   Excluir
                 </button>

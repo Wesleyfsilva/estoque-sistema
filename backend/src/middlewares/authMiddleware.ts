@@ -1,28 +1,26 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import { Request, Response, NextFunction } from "express";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import multer from "multer";
 
-interface JwtPayload {
-    id: number;
-}
+const storage = multer.memoryStorage(); // Armazena em memória (ou ajuste para salvar no disco)
+export const upload = multer({ storage });
 
-export const authenticateToken = (req: Request, res: Response, next: NextFunction): void => {
-    const authHeader = req.headers['authorization'];
-    console.log("Cabeçalho Authorization recebido:", authHeader);
 
-    const token = authHeader && authHeader.split(' ')[1];
+export const authenticate = (req: Request, res: Response, next: NextFunction): void => {
+  const authHeader = req.headers.authorization;
 
-    if (!token) {
-        res.status(401).json({ error: 'Token não fornecido' });
-        return;
-    }
+  if (!authHeader) {
+    res.status(401).json({ error: "Token não fornecido." });
+    return;
+  }
 
-    jwt.verify(token, process.env.JWT_SECRET as string, (err, decoded) => {
-        if (err) {
-            console.error("Erro ao verificar token:", err);
-            res.status(403).json({ error: 'Token inválido' });
-            return;
-        }
-        console.log("Token verificado com sucesso:", decoded);
-        next();
-    });
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const decoded = jwt.verify(token, "SUA_CHAVE_SECRETA") as JwtPayload;
+    req.user = decoded; // Assumindo que você estendeu a interface Request
+    next();
+  } catch (error) {
+    res.status(401).json({ error: "Token inválido." });
+  }
 };

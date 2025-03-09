@@ -1,28 +1,18 @@
-import express from 'express';
-import multer from 'multer';
+import { Router } from "express";
 import {
-    getProducts,
-    addProduct,
-    deleteProduct, // Importar a função de exclusão
-} from '../controllers/productsControllers';
-import { authenticateToken } from '../middlewares/authMiddleware';
+  getProducts,
+  getProductById,
+  addProduct,
+  updateProduct,
+  deleteProduct,
+} from "../controllers/productsControllers";
 
-const router = express.Router();
+const router = Router();
 
-// Configuração do multer para upload de imagens
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './uploads/'); // Diretório onde as imagens serão salvas
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname); // Gera nomes únicos para cada arquivo
-    },
-});
-const upload = multer({ storage });
-
-// Rotas de produtos
-router.get('/', authenticateToken, getProducts); // Lista produtos
-router.post('/', authenticateToken, upload.single('image'), addProduct); // Adiciona produto
-router.delete('/:id', authenticateToken, deleteProduct); // Exclui produto
+router.get("/", getProducts);
+router.get("/:id", getProductById);
+router.post("/", addProduct);
+router.put("/:id", updateProduct);
+router.delete("/:id", deleteProduct);
 
 export default router;
